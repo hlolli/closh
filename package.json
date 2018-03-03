@@ -12,6 +12,7 @@
   "dependencies": {
     "deasync": "git://github.com/dundalek/deasync.git#master",
     "glob": "7.1.2",
+    "mkdirp": "0.5.1",
     "sqlite3": "git://github.com/dundalek/node-sqlite3.git#master"
   },
   "devDependencies": {

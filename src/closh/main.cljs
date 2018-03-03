@@ -3,6 +3,7 @@
             [clojure.string]
             [goog.object :as gobj]
             [lumo.repl]
+            [lumo.io]
             [closh.parser]
             [closh.builtin]
             [closh.util]
@@ -19,6 +20,7 @@
 (def ^:no-doc fs (js/require "fs"))
 (def ^:no-doc os (js/require "os"))
 (def ^:no-doc path (js/require "path"))
+(def ^:no-doc mkdirp-sync (.-sync (js/require "mkdirp")))
 
 ; (def util-binding (js/process.binding "util"))
 
@@ -26,6 +28,26 @@
 
 (def ^:no-doc initial-readline-state {:mode :input})
 (def ^:no-doc readline-state (atom initial-readline-state))
+
+(def packed-modules ["deasync.node" "node_sqlite3.node"])
+(def module-path (path.join (os.homedir) ".closh" "cache" "modules" js/process.env.CLOSH_VERSION))
+
+(defn unpack-modules [modules module-path]
+  (try
+    (mkdirp-sync module-path)
+    (catch :default e
+      (js/console.log "Could not create cache direcotry:" module-path)
+      (js/console.log "Error:" e)
+      (js/process.exit 1)))
+  (doseq [m modules]
+    (let [filename (path.join module-path m)]
+      (when-not (try (-> (fs.statSync filename)
+                         (.isFile))
+                     (catch :default _))
+        (->> (str "resources/" m)
+          (lumo.io/resource)
+          (lumo.io/slurp)
+          (fs.writeFileSync filename))))))
 
 (defn load-init-file
   "Loads init file."
@@ -212,6 +234,7 @@
     (.on "SIGQUIT" (fn []))
     ; ignore SIGINT when not running a command (when running a command it already interupts execution with exception)
     (.on "SIGINT" (fn [])))
+  (unpack-modules packed-modules module-path)
   (load-init-file (path.join (os.homedir) ".closhrc"))
   (let [rl (.createInterface readline
              #js{:input js/process.stdin
