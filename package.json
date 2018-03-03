@@ -10,16 +10,19 @@
     "test": "test"
   },
   "dependencies": {
-    "deasync": "0.1.12",
+    "deasync": "git://github.com/dundalek/deasync.git#master",
     "glob": "7.1.2",
-    "sqlite3": "^3.1.13"
+    "sqlite3": "git://github.com/dundalek/node-sqlite3.git#master"
   },
   "devDependencies": {
+    "fs-extra": "5.0.0",
     "nodemon": "1.12.1",
+    "pkg-lumo": "git://github.com/dundalek/pkg-lumo.git#master",
     "tmp": "0.0.33"
   },
   "scripts": {
     "start": "node ./bin/closh.js",
+    "build": "node ./scripts/build.js",
     "dev": "nodemon --config .nodemon.json",
     "docker-build": "docker build . -t closh",
     "docker-start": "npm run docker-build && docker run --rm -it closh",
