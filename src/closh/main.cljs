@@ -31,7 +31,7 @@
 (def ^:no-doc readline-state (atom initial-readline-state))
 
 (def packed-modules ["deasync.node" "node_sqlite3.node"])
-(def module-path (path.join (os.homedir) ".closh" "cache" "modules" js/process.env.CLOSH_VERSION))
+(def module-path (path.join (os.homedir) ".closh" "cache" "modules" "v0.2.0"))
 
 (defn unpack-modules [modules module-path]
   (try
