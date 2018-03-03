@@ -1,12 +1,12 @@
 (ns closh.util
   (:require [clojure.data :refer [diff]]
-            [goog.object :as gobj]))
+            [goog.object :as gobj]
+            [tmp]))
 
 (def ^:no-doc fs (js/require "fs"))
 (def ^:no-doc child-process (js/require "child_process"))
 (def ^:no-doc os (js/require "os"))
 (def ^:no-doc path (js/require "path"))
-(def ^:no-doc tmp (js/require "tmp"))
 
 (def ignore-env-vars #{"_" "OLDPWD" "PWD" "SHELLOPTS" "SHLVL"})
 
@@ -36,7 +36,7 @@
   ([exp] (source-shell "bash" exp))
   ([shell exp]
    (let [before (jsx->clj js/process.env)
-         temp-file (tmp.tmpNameSync)
+         temp-file (.tmpNameSync tmp)
          result (spawn-shell shell (str exp "&& (node -p 'JSON.stringify(process.env)') >" temp-file))]
      (if (= (:status result) 0)
        (let [after (js->clj (js/JSON.parse (fs.readFileSync temp-file "utf8")))

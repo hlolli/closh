@@ -1,12 +1,12 @@
 (ns closh.history
   (:require [clojure.string]
-            [goog.object :as gobj]))
+            [goog.object :as gobj]
+            [sqlite3]))
 
 (def ^:no-doc os (js/require "os"))
 (def ^:no-doc path (js/require "path"))
 (def ^:no-doc fs (js/require "fs"))
-(def ^:no-doc sqlite (-> (js/require "sqlite3")
-                         (.verbose)))
+(def ^:no-doc sqlite (.verbose sqlite3))
 
 (def db-file
   "Path to the db file, defaults to ~/.closh/closh.sqlite"

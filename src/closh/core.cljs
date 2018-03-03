@@ -1,7 +1,8 @@
 (ns closh.core
   (:require [clojure.string]
-            [goog.object :as gobj]))
-
+            [goog.object :as gobj]
+            [glob]
+            [deasync]))
 (def *closh-aliases* {})
 (def *closh-abbreviations* {})
 (def *closh-commands* {})
@@ -9,8 +10,7 @@
 (def ^:no-doc fs (js/require "fs"))
 (def ^:no-doc child-process (js/require "child_process"))
 (def ^:no-doc stream (js/require "stream"))
-(def ^:no-doc glob (.-sync (js/require "glob")))
-(def ^:no-doc deasync (js/require "deasync"))
+(def ^:no-doc glob-sync (.-sync glob))
 
 (def command-not-found-bin "/usr/lib/command-not-found")
 
@@ -33,7 +33,7 @@
 (defn expand-filename
   "Expands filename based on globbing patterns"
   [s]
-  (seq (glob s #js{:nonull true})))
+  (seq (glob-sync s #js{:nonull true})))
 
 (defn expand-redirect
   "Expand redirect targets. It does tilde and variable expansion."

@@ -4,6 +4,7 @@
             [goog.object :as gobj]
             [lumo.repl]
             [lumo.io]
+            [mkdirp]
             [closh.parser]
             [closh.builtin]
             [closh.util]
@@ -20,7 +21,7 @@
 (def ^:no-doc fs (js/require "fs"))
 (def ^:no-doc os (js/require "os"))
 (def ^:no-doc path (js/require "path"))
-(def ^:no-doc mkdirp-sync (.-sync (js/require "mkdirp")))
+(def ^:no-doc mkdirp-sync (.-sync mkdirp))
 
 ; (def util-binding (js/process.binding "util"))
 
